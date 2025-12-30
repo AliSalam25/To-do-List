@@ -1,3 +1,29 @@
+import os
+TASKS_FILE = "tasks.txt"
+
+def load_tasks():
+    tasks = []
+    if os.path.exists(TASKS_FILE):
+        with open(TASKS_FILE, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                done_flag, description = line.split(";", 1)
+                tasks.append({
+                    "description": description,
+                    "done": done_flag == "1"
+                })
+    return tasks
+
+
+def save_tasks(tasks):
+    with open(TASKS_FILE, "w", encoding="utf-8") as f:
+        for task in tasks:
+            done_flag = "1" if task["done"] else "0"
+            f.write(f"{done_flag};{task['description']}\n")
+
+
 def show_tasks(tasks):
     if not tasks:
         print("\nNo tasks yet. Add your first one!\n")
@@ -17,6 +43,7 @@ def add_task(tasks):
         print("Task added.\n")
     else:
         print("Task description cannot be empty.\n")
+
 
 def mark_done(tasks):
     if not tasks:
@@ -38,12 +65,29 @@ def mark_done(tasks):
 
 
 def delete_task(tasks):
-    pass
+    if not tasks:
+        print("No tasks to delete.\n")
+        return
+
+    show_tasks(tasks)
+    choice = input("Enter the number of the task to delete: ").strip()
+    if not choice.isdigit():
+        print("Please enter a valid number.\n")
+        return
+
+    index = int(choice) - 1
+    if 0 <= index < len(tasks):
+        removed = tasks.pop(index)
+        print(f"Deleted task: {removed['description']}\n")
+    else:
+        print("Task number out of range.\n")
 
 
 def main():
-    tasks = []
     print("Simple To-Do List")
+    print("-----------------\n")
+
+    tasks = load_tasks()
 
     while True:
         print("Choose an option:")
@@ -51,7 +95,7 @@ def main():
         print("2. Add a task")
         print("3. Mark a task as done")
         print("4. Delete a task")
-        print("5. Exit")
+        print("5. Save and exit")
 
         choice = input("Enter 1-5: ").strip()
 
@@ -64,6 +108,12 @@ def main():
         elif choice == "4":
             delete_task(tasks)
         elif choice == "5":
+            save_tasks(tasks)
+            print("Tasks saved. Goodbye!")
             break
         else:
-            print("Invalid choice.\n")
+            print("Invalid choice. Please enter a number from 1 to 5.\n")
+
+
+if __name__ == "__main__":
+    main()
