@@ -10,9 +10,13 @@ def show_tasks(tasks):
     print()
 
 
-
 def add_task(tasks):
-    pass
+    description = input("Enter a new task: ").strip()
+    if description:
+        tasks.append({"description": description, "done": False})
+        print("Task added.\n")
+    else:
+        print("Task description cannot be empty.\n")
 
 
 def mark_done(tasks):
