@@ -1,7 +1,14 @@
 def show_tasks(tasks):
+    if not tasks:
+        print("\nNo tasks yet. Add your first one!\n")
+        return
+
     print("\nYour tasks:")
-    for task in tasks:
-        print(task)
+    for index, task in enumerate(tasks, start=1):
+        status = "[x]" if task["done"] else "[ ]"
+        print(f"{index}. {status} {task['description']}")
+    print()
+
 
 
 def add_task(tasks):
